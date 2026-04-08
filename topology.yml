@@ -1,0 +1,54 @@
+---
+apiVersion: phenix.sandia.gov/v1
+kind: Topology
+metadata:
+  name: ${BRANCH_NAME}
+spec:
+  nodes:
+    - general:
+        hostname: vm1
+      hardware:
+        drives:
+          - image: noble.qc2
+        os_type: linux
+        memory: 2048
+        vcpus: 2
+      network:
+        interfaces:
+          - address: 10.10.10.10
+            mask: 24
+            name: test
+            proto: static
+            type: ethernet
+            vlan: test
+          - address: 172.16.1.10
+            mask: 24
+            name: mgmt
+            proto: static
+            type: ethernet
+            vlan: MGMT
+      type: VirtualMachine
+
+    - general:
+        hostname: vm2
+      hardware:
+        drives:
+          - image: noble.qc2
+        os_type: linux
+        memory: 2048
+        vcpus: 2
+      network:
+        interfaces:
+          - address: 10.10.10.11
+            mask: 24
+            name: test
+            proto: static
+            type: ethernet
+            vlan: test
+          - address: 172.16.1.11
+            mask: 24
+            name: mgmt
+            proto: static
+            type: ethernet
+            vlan: MGMT
+      type: VirtualMachine
