@@ -4,7 +4,8 @@
 
 SHELL=/bin/bash
 PHENIX=docker exec -it phenix phenix
-EXP?=test
+BRANCH_NAME?=test
+export BRANCH_NAME
 
 
 PHENIX_HOST="http://localhost:3000"
@@ -17,17 +18,17 @@ help:
 
 # Reload topology and scenario
 topo-reload:
-	curl -X POST -H "Content-Type: application/x-yaml" --data-binary "@topology.yml" $(WORKFLOW_API)/configs/$(EXP)
-	curl -X POST -H "Content-Type: application/x-yaml" --data-binary "@scenario.yml" $(WORKFLOW_API)/configs/$(EXP)
+	envsubst < topology.yml | curl -X POST -H "Content-Type: application/x-yaml" --data-binary @- $(WORKFLOW_API)/configs/$(BRANCH_NAME)
+	envsubst < scenario.yml | curl -X POST -H "Content-Type: application/x-yaml" --data-binary @- $(WORKFLOW_API)/configs/$(BRANCH_NAME)
 
 # Reload and start the experiment
 exp-reload: 
-	curl -X POST -H "Content-Type: application/x-yaml" --data-binary "@.phenix.yml" $(WORKFLOW_API)/apply/$(EXP)
+	curl -X POST -H "Content-Type: application/x-yaml" --data-binary "@.phenix.yml" $(WORKFLOW_API)/apply/$(BRANCH_NAME)
 
 # Reload topology and scenario and restart experiment
 full-reload: topo-reload exp-reload
 
 # Stop the experiment
 exp-stop:
-	$(PHENIX) exp stop $(EXP) || true
+	$(PHENIX) exp stop $(BRANCH_NAME) || true
 
